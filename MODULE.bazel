@@ -1,10 +1,12 @@
 "Bazel dependencies"
 
 module(
-    name = "com_myorg_rules_mylang",
+    name = "rules_vitest",
     version = "0.0.0",
     compatibility_level = 1,
 )
+
+bazel_dep(name = "aspect_rules_js", version = "2.1.1")
 
 bazel_dep(name = "bazel_skylib", version = "1.4.1")
 bazel_dep(name = "platforms", version = "0.0.5")
