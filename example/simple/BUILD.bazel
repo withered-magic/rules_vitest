@@ -1,0 +1,10 @@
+load("@rules_vitest//vitest:defs.bzl", "vitest_test")
+
+vitest_test(
+    name = "simple_test",
+    data = [
+        "sum.js",
+        "sum.test.js",
+    ],
+    node_modules = "//:node_modules",
+)

@@ -23,6 +23,7 @@ def _vitest_test_impl(ctx):
         ctx,
         log_prefix_rule_set = "rules_vitest",
         log_prefix_rule = "vitest_test",
+        fixed_args = ["run"],
     )
 
     files = ctx.files.data[:]
@@ -61,4 +62,6 @@ lib = struct(
 vitest_test = rule(
     implementation = lib.implementation,
     attrs = lib.attrs,
+    toolchains = js_binary_lib.toolchains,
+    test = True,
 )
