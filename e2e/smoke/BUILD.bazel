@@ -1,0 +1,17 @@
+"""Provides a simple way to test your rules as an external workspace.
+Add a basic smoke-test target below.
+"""
+
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_vitest//vitest:defs.bzl", "vitest_test")
+
+npm_link_all_packages(name = "node_modules")
+
+vitest_test(
+    name = "smoke_test",
+    data = [
+        "sum.js",
+        "sum.test.js",
+    ],
+    node_modules = ":node_modules",
+)
