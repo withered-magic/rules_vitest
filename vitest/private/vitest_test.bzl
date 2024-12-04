@@ -12,23 +12,49 @@ _attrs = dicts.add(js_binary_lib.attrs, {
     "entry_point": attr.label(
         mandatory = True,
     ),
+    "update_snapshots": attr.bool(),
+    "_vitest_config_template": attr.label(
+        allow_single_file = True,
+        default = "@//vitest/private:vitest.config.template.ts",
+    ),
 })
 
 def _vitest_test_impl(ctx):
     # type: (ctx) -> Unknown
     providers = []
+    generated_config = ctx.actions.declare_file("%s__vitest.config.ts" % ctx.label.name)
     user_config = copy_file_to_bin_action(ctx, ctx.file.config) if ctx.attr.config else None
+
+    ctx.actions.expand_template(
+        template = ctx.file._vitest_config_template,
+        output = generated_config,
+    )
+
+    # Vitest runs in watch mode by default, need to use "vitest run" to perform a single run.
+    fixed_args = ["run"]
+    fixed_env = {}  # type: dict[string, string]
+
+    fixed_args.extend([
+        "--config",
+        generated_config.short_path,
+    ])
+
+    if ctx.attr.update_snapshots:
+        fixed_args.append("--update")
+        fixed_env["VITEST_TEST__UPDATE_SNAPSHOTS"] = "1"
 
     launcher = js_binary_lib.create_launcher(
         ctx,
         log_prefix_rule_set = "rules_vitest",
         log_prefix_rule = "vitest_test",
-        fixed_args = ["run"],
+        fixed_args = fixed_args,
+        fixed_env = fixed_env,
     )
 
     files = ctx.files.data[:]
     if user_config:
         files.append(user_config)
+    files.append(generated_config)
 
     runfiles = ctx.runfiles(
         files = files,

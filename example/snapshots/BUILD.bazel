@@ -1,0 +1,10 @@
+load("@rules_vitest//vitest:defs.bzl", "vitest_test")
+
+vitest_test(
+    name = "snapshots_test",
+    data = [
+        "snapshots.test.js",
+    ],
+    node_modules = "//:node_modules",
+    snapshots = True,
+)
