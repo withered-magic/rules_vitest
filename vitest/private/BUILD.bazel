@@ -1,1 +1,24 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 exports_files(["vitest.config.template.ts"])
+
+bzl_library(
+    name = "maybe",
+    srcs = ["maybe.bzl"],
+    visibility = ["//vitest:__subpackages__"],
+    deps = [
+        "@bazel_tools//tools/build_defs/repo:http.bzl",
+        "@bazel_tools//tools/build_defs/repo:utils.bzl",
+    ],
+)
+
+bzl_library(
+    name = "vitest_test_rule",
+    srcs = ["vitest_test_rule.bzl"],
+    visibility = ["//vitest:__subpackages__"],
+    deps = [
+        "@aspect_bazel_lib//lib:copy_to_bin",
+        "@aspect_rules_js//js:libs",
+        "@bazel_skylib//lib:dicts",
+    ],
+)

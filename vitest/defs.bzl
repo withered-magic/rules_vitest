@@ -1,7 +1,7 @@
 "Public API re-exports"
 
 load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
-load("//vitest/private:vitest_test.bzl", vitest_test_rule = "vitest_test")
+load("//vitest/private:vitest_test_rule.bzl", vitest_test_rule = "vitest_test")
 
 def vitest_test(
         name,
