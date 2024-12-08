@@ -15,7 +15,7 @@ _attrs = dicts.add(js_binary_lib.attrs, {
     "update_snapshots": attr.bool(),
     "_vitest_config_template": attr.label(
         allow_single_file = True,
-        default = "@//vitest/private:vitest.config.template.ts",
+        default = "//vitest/private:vitest.config.template.ts",
     ),
 })
 
