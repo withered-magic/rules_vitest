@@ -3,20 +3,17 @@
 bazel_dep(name = "aspect_bazel_lib", version = "2.7.7", dev_dependency = True)
 bazel_dep(name = "aspect_rules_js", version = "2.0.0", dev_dependency = True)
 bazel_dep(name = "bazel_skylib", version = "1.7.1", dev_dependency = True)
-bazel_dep(name = "rules_nodejs", version = "6.2.0")
+bazel_dep(name = "rules_nodejs", version = "6.2.0", dev_dependency = True)
 bazel_dep(name = "rules_vitest", version = "0.0.0", dev_dependency = True)
-
 local_path_override(
     module_name = "rules_vitest",
     path = "../..",
 )
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
-
 npm.npm_translate_lock(
     name = "npm",
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
 )
-
 use_repo(npm, "npm")

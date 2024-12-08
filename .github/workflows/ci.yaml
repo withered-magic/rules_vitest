@@ -25,6 +25,7 @@ jobs:
           ".",
           "e2e/smoke"
         ]
+      # We don't test on Windows in CI because our chosen aspect_bazel_lib version runs into https://github.com/bazel-contrib/bazel-lib/issues/935.
       exclude: |
         [
           {"folder": ".", "bzlmodEnabled": false},
