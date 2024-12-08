@@ -1,5 +1,8 @@
+"Runtime dependencies for rules_vitest"
+
 load("//vitest/private:maybe.bzl", http_archive = "maybe_http_archive")
 
+# buildifier: disable=function-docstring
 def rules_vitest_dependencies():
     http_archive(
         name = "bazel_skylib",
