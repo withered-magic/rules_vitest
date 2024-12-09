@@ -2,6 +2,7 @@ load("@rules_vitest//vitest:defs.bzl", "vitest_test")
 
 vitest_test(
     name = "simple_test",
+    config = "vitest.config.mjs",
     data = [
         "sum.js",
         "sum.test.js",

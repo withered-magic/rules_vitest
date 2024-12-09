@@ -15,19 +15,22 @@ _attrs = dicts.add(js_binary_lib.attrs, {
     "update_snapshots": attr.bool(),
     "_vitest_config_template": attr.label(
         allow_single_file = True,
-        default = "//vitest/private:vitest.config.template.ts",
+        default = "//vitest/private:vitest.config.template.mts",
     ),
 })
 
 def _vitest_test_impl(ctx):
     # type: (ctx) -> Unknown
     providers = []
-    generated_config = ctx.actions.declare_file("%s__vitest.config.ts" % ctx.label.name)
+    generated_config = ctx.actions.declare_file("%s__vitest.config.mts" % ctx.label.name)
     user_config = copy_file_to_bin_action(ctx, ctx.file.config) if ctx.attr.config else None
 
     ctx.actions.expand_template(
         template = ctx.file._vitest_config_template,
         output = generated_config,
+        substitutions = {
+            "{{USER_CONFIG_SHORT_PATH}}": user_config.short_path if user_config else "",
+        },
     )
 
     # Vitest runs in watch mode by default, need to use "vitest run" to perform a single run.

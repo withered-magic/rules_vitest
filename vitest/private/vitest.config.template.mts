@@ -1,12 +1,26 @@
 import * as path from "path";
 import { ViteUserConfig } from "vitest/config";
 
+function resolveRunfilesPath(rootPath) {
+  return path.join(
+    process.env.RUNFILES,
+    process.env.JS_BINARY__WORKSPACE,
+    rootPath
+  );
+}
+
+const userConfigShortPath = "{{USER_CONFIG_SHORT_PATH}}";
 const updateSnapshots = !!process.env.VITEST_TEST__UPDATE_SNAPSHOTS;
-const testConfig: ViteUserConfig["test"] = {};
 const testRoot = path.join(
   process.env.TEST_SRCDIR!,
   process.env.TEST_WORKSPACE!
 );
+
+let testConfig: ViteUserConfig["test"] = {};
+if (userConfigShortPath) {
+  testConfig = (await import(resolveRunfilesPath(userConfigShortPath))).default
+    .test;
+}
 
 if (updateSnapshots) {
   if (!process.env.BUILD_WORKSPACE_DIRECTORY) {
