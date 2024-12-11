@@ -9,6 +9,7 @@ _attrs = dicts.add(js_binary_lib.attrs, {
         # Supported file extensions according to https://vitest.dev/guide/#configuring-vitest
         allow_single_file = [".js", ".mjs", ".cjs", ".ts", ".cts", ".mts"],
     ),
+    "base_dir": attr.string(),
     "entry_point": attr.label(
         mandatory = True,
     ),
@@ -40,6 +41,8 @@ def _vitest_test_impl(ctx):
     fixed_args.extend([
         "--config",
         generated_config.short_path,
+        "--dir",
+        ctx.attr.base_dir,
     ])
 
     if ctx.attr.update_snapshots:
