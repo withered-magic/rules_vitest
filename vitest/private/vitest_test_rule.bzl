@@ -41,9 +41,13 @@ def _vitest_test_impl(ctx):
     fixed_args.extend([
         "--config",
         generated_config.short_path,
-        "--dir",
-        ctx.attr.base_dir,
     ])
+
+    if ctx.attr.base_dir:
+        fixed_args.extend([
+            "--dir",
+            ctx.attr.base_dir,
+        ])
 
     if ctx.attr.update_snapshots:
         fixed_args.append("--update")

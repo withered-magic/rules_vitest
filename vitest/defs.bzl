@@ -28,7 +28,7 @@ def vitest_test(
 
     data = kwargs.pop("data", [])  # type: list[string]
     data.append("{}/vitest".format(node_modules))
-    data.extend(native.glob(["__snapshots__/**"]))
+    data.extend(native.glob(["__snapshots__/**"], allow_empty = True))
 
     tags = kwargs.pop("tags", [])  # type: list[string]
 
