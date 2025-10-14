@@ -16,11 +16,15 @@ const testRoot = path.join(
   process.env.TEST_WORKSPACE!
 );
 
-let testConfig: ViteUserConfig["test"] = {};
-if (userConfigShortPath) {
-  testConfig = (await import(resolveRunfilesPath(userConfigShortPath))).default
-    .test;
+const config: ViteUserConfig = userConfigShortPath
+  ? (await import(resolveRunfilesPath(userConfigShortPath))).default
+  : {};
+
+if (!config.test) {
+  config.test = {};
 }
+
+let testConfig: ViteUserConfig["test"] = config.test;
 
 if (updateSnapshots) {
   if (!process.env.BUILD_WORKSPACE_DIRECTORY) {
@@ -40,4 +44,4 @@ if (updateSnapshots) {
   };
 }
 
-export default { test: testConfig };
+export default config;
