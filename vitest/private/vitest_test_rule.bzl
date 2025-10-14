@@ -3,6 +3,7 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_file_to_bin_action")
 load("@aspect_rules_js//js:libs.bzl", "js_binary_lib", "js_lib_helpers")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
+load("@bazel_skylib//lib:paths.bzl", "paths")
 
 _attrs = dicts.add(js_binary_lib.attrs, {
     "config": attr.label(
@@ -10,6 +11,7 @@ _attrs = dicts.add(js_binary_lib.attrs, {
         allow_single_file = [".js", ".mjs", ".cjs", ".ts", ".cts", ".mts"],
     ),
     "base_dir": attr.string(),
+    "chdir": attr.string(),
     "entry_point": attr.label(
         mandatory = True,
     ),
@@ -34,13 +36,18 @@ def _vitest_test_impl(ctx):
         },
     )
 
+    # Unwind the chdir argument to adapt the path arguments
+    unwind_chdir_prefix = ""
+    if ctx.attr.chdir:
+        unwind_chdir_prefix = "/".join([".."] * len(ctx.attr.chdir.split("/"))) + "/"
+
     # Vitest runs in watch mode by default, need to use "vitest run" to perform a single run.
     fixed_args = ["run"]
     fixed_env = {}  # type: dict[string, string]
 
     fixed_args.extend([
         "--config",
-        generated_config.short_path,
+        "'" + paths.join(unwind_chdir_prefix, generated_config.short_path) + "'",
     ])
 
     if ctx.attr.base_dir:
